@@ -1,0 +1,80 @@
+### Health Check
+GET http://localhost:4000/health
+
+### Real Job Search (Main Workflow) - Old Endpoint
+POST http://localhost:4000/chat
+Content-Type: application/json
+
+{
+    "query": "Find me product manager jobs in mumbai",
+    "mode": "job"
+}
+
+### General Chat - Old Endpoint
+POST http://localhost:4000/chat
+Content-Type: application/json
+
+{
+    "query": "How does this agent work?",
+    "mode": "normal"
+}
+
+### 1. Job Search - Page 1
+POST http://localhost:4000/jobs/search
+Content-Type: application/json
+
+{
+  "query": "data science internships in Hyderabad",
+  "page": 1,
+  "page_size": 4
+}
+
+### 2. Job Search - Page 2 (Should be different results)
+POST http://localhost:4000/jobs/search
+Content-Type: application/json
+
+{
+  "query": "data science internships in Hyderabad",
+  "page": 2,
+  "page_size": 4
+}
+
+### 3. Recommend with Resume Only
+POST http://localhost:4000/jobs/recommend-with-resume
+Content-Type: application/json
+
+{
+  "query": "machine learning jobs",
+  "resume_text": "I am a skilled Python developer with experience in scikit-learn and pandas.",
+  "page": 1,
+  "page_size": 4
+}
+
+### 4. Recommend with Personal Details Only
+POST http://localhost:4000/jobs/recommend-with-resume
+Content-Type: application/json
+
+{
+  "query": "5 frontend developer jobs",
+  "user_name": "Rohan",
+  "user_age": 25,
+  "tech_skills": ["React", "TypeScript", "Node.js"],
+  "experience": "3 years of frontend development",
+  "page": 1,
+  "page_size": 4
+}
+
+### 5. Recommend with EVERYTHING (Resume + Details)
+POST http://localhost:4000/jobs/recommend-with-resume
+Content-Type: application/json
+
+{
+  "query": "i need 5 exciting and enjoyable backend engineer jobs with good work culture",
+  "resume_text": "I am a skilled Python developer with experience in scikit-learn and pandas...i love to build that makes a difference",
+  "user_name": "Rohan",
+  "user_age": 25,
+  "tech_skills": ["Python", "FastAPI", "PostgreSQL", "Docker"],
+  "experience": "5 years building scalable backends",
+  "page": 1,
+  "page_size": 4
+}
