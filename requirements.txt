@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+python-dotenv
+langgraph
+langchain-google-genai
+langchain-core
+langchain-mcp-adapters
+pydantic
+tavily-python
+firecrawl-py
+requests
+httpx
