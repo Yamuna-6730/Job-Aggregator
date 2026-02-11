@@ -25,7 +25,7 @@ tavily_client = TavilyClient(api_key=TAVILY_API_KEY)
 
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
-    google_api_key="AIzaSyDiqWSHL3dHzil4z__UOP9t9GCm7zG3vSQ",
+    google_api_key=os.getenv("GOOGLE_API_KEY_5"),
     temperature=0.0,
 )
 

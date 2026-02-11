@@ -135,7 +135,6 @@ export default function ChatInterface({
       metadata: null,
     };
 
-    // Append (never replace) — prevents "query disappears" + job cards flicker.
     setMessages((prev) => [...prev, userMsg, assistantPlaceholder]);
     setQuery("");
     setLoading(true);
