@@ -15,7 +15,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
     temperature=0.2,
-    api_key=os.getenv("GOOGLE_API_KEY_4")
+    google_api_key=os.getenv("GOOGLE_API_KEY_4")
 )
 
 def normalize_mcp_result(result: Any) -> Any:

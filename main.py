@@ -1,6 +1,8 @@
 import os
 import json
 import asyncio
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from typing import TypedDict, List, Literal, Any, Dict
 from config import AppState, log
 from dotenv import load_dotenv
@@ -28,7 +30,7 @@ load_dotenv()
 # =======================
 # We can use the same generic LLM for normal chat or import a dedicated one.
 # Reusing the setup from previous main.py for normal chat.
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.3)
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.3, google_api_key=os.getenv("GOOGLE_API_KEY_1"))
 
 async def normal_chat_node(state: AppState) -> AppState:
     log("NORMAL CHAT NODE", state["user_input"])

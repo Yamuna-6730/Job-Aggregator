@@ -21,7 +21,7 @@ class RouteDecision(BaseModel):
 router_llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
     temperature=0.2,
-    api_key=os.getenv("GOOGLE_API_KEY_3")
+    google_api_key=os.getenv("GOOGLE_API_KEY_3")
 ).with_structured_output(RouteDecision)
 
 # -----------------------

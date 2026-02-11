@@ -1,3 +1,5 @@
+import os
+import sys
 import uvicorn
 import hashlib
 import json
@@ -8,8 +10,8 @@ from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Import from your existing project
 from main import build_graph
 from config import AppState, log
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -99,6 +101,7 @@ graph_app = build_graph()
 llm_ranker = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
     temperature=0.1,
+    google_api_key=os.getenv("GOOGLE_API_KEY_2")
 )
 
 def get_query_key(query: str) -> str:
