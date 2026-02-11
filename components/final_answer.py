@@ -14,7 +14,7 @@ load_dotenv()
 
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
-    google_api_key="AIzaSyCJ9QCZrwzk_ZH7etwKERbVmiUbLfVdmzg",
+    google_api_key="AIzaSyCXwA6FkjXhDOdEL1y8yenwe-CtPxLyFM0",
     temperature=0.3,
 )
 

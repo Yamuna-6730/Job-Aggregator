@@ -1,6 +1,5 @@
 ####not usingnnnnnnnn
 
-
 import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -8,13 +7,16 @@ import re
 from typing import Dict, Any
 from typing import List, Dict, Any, Optional, Literal
 from datetime import datetime, timezone
+from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from pydantic import BaseModel, Field
+
+load_dotenv()
 
 llm= ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
     temperature=0.2,
-    api_key="AIzaSyDiqWSHL3dHzil4z__UOP9t9GCm7zG3vSQ"
+    api_key=os.getenv("GOOGLE_API_KEY_5")
 )
 
 

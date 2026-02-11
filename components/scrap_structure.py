@@ -18,15 +18,12 @@ from config import AppState, log
 # ============================
 load_dotenv()
 
-
-
-
-firecrawl = Firecrawl(api_key="fc-66f8af9cd9b349848648d3abb89e8f57")
-tavily_client = TavilyClient(api_key="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")
+firecrawl = Firecrawl("fc-66f8af9cd9b349848648d3abb89e8f57")
+tavily_client = TavilyClient("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")
 
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
-    google_api_key="AIzaSyCUYzXzYMfP2AVwtRteFkKucXyZpenP33c",
+    google_api_key=os.getenv("GOOGLE_API_KEY_2"),
     temperature=0.2,
 )
 

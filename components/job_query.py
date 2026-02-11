@@ -9,18 +9,10 @@ from config import AppState, log
 # Load env if not loaded
 load_dotenv()
 
-# Define LLM (Using the same Google API key logic as indeed/router for consistency, or env)
-# indeed.py used os.getenv("GOOGLE_API_KEY"). 
-# router.py used a hardcoded key. 
-# scrap_structure used another hardcoded key.
-# I will use os.getenv("GOOGLE_API_KEY") if available, or fall back to one of the known keys if needed.
-# indeed.py used:
-# llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=os.getenv("GOOGLE_API_KEY"), temperature=0.0)
-# I'll stick to that.
 
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
-    google_api_key="AIzaSyABC7qi8eXjAp86EY5SKh6WBN2uhVxTkt0",
+    google_api_key=os.getenv("GOOGLE_API_KEY_1"),
     temperature=0.0
 )
 

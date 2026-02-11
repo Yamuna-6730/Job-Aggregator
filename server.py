@@ -4,6 +4,7 @@ import json
 import asyncio
 import traceback
 from fastapi import FastAPI, HTTPException, Body
+from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List
@@ -43,6 +44,12 @@ class ChatRequest(BaseModel):
     query: str
     mode: str = "normal"  # "normal" or "job"
     limit: int = 5
+
+class ChatStreamRequest(BaseModel):
+    query: str
+    mode: str = "normal"  # "normal" or "job"
+    limit: int = 5
+    session_id: Optional[str] = None
 
 class ChatResponse(BaseModel):
     final_answer: Optional[str] = None
@@ -290,6 +297,79 @@ async def chat_endpoint(request: ChatRequest):
         print(f"Error in chat endpoint: {e}")
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/chat/stream")
+async def chat_stream_endpoint(request: ChatStreamRequest):
+    """
+    Streaming chat endpoint (SSE).
+    Emits:
+      - event: status (Thinking..., Searching...)
+      - event: token (assistant text chunks)
+      - event: final (final JSON payload)
+    """
+    def sse(event: str, data: str) -> str:
+        # SSE supports multiple data: lines for newlines
+        lines = data.splitlines() or [""]
+        return f"event: {event}\n" + "\n".join([f"data:{line}" for line in lines]) + "\n\n"
+
+    async def gen():
+        try:
+            yield sse("status", "Thinking...")
+            await asyncio.sleep(0.15)
+            yield sse("status", "Searching...")
+
+            initial_state: AppState = {
+                "user_input": request.query,
+                "mode": request.mode,
+                "limit": request.limit,
+                "job_urls": [],
+                "jobs": [],
+                "keywords": [],
+                "location": [],
+                "structured_data": {},
+                "final_answer": "",
+            }
+
+            task = asyncio.create_task(graph_app.ainvoke(initial_state))
+
+            # Keep connection alive while graph runs
+            while not task.done():
+                await asyncio.sleep(1.0)
+                yield sse("status", "Searching...")
+
+            result = await task
+
+            final_answer = result.get("final_answer") or ""
+            structured_data = result.get("structured_data")
+            job_urls = result.get("job_urls")
+
+            # Progressive reveal (best-effort) after computation
+            chunk_size = 18
+            for i in range(0, len(final_answer), chunk_size):
+                yield sse("token", final_answer[i : i + chunk_size])
+                await asyncio.sleep(0)
+
+            payload = {
+                "final_answer": final_answer,
+                "structured_data": structured_data,
+                "job_urls": job_urls,
+                "status": "success",
+                "session_id": request.session_id,
+            }
+            yield sse("final", json.dumps(payload))
+        except Exception as e:
+            print(f"Error in chat stream endpoint: {e}")
+            traceback.print_exc()
+            yield sse("final", json.dumps({"status": "error", "detail": str(e)}))
+
+    return StreamingResponse(
+        gen(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+        },
+    )
 
 @app.post("/jobs/search", response_model=SearchResponse)
 async def search_jobs(request: SearchRequest):

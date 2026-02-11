@@ -2,10 +2,14 @@ import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from dotenv import load_dotenv
 from config import AppState, log
 from typing import Literal
 from pydantic import BaseModel
 from langchain_google_genai import ChatGoogleGenerativeAI
+
+# Load environment variables
+load_dotenv()
 
 # -----------------------
 # Pydantic Schema
@@ -17,7 +21,7 @@ class RouteDecision(BaseModel):
 router_llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
     temperature=0.2,
-    api_key="AIzaSyBHjJ9NglMrL1mxJCBwdYYgsYGUVwIxfjU"
+    api_key=os.getenv("GOOGLE_API_KEY_3")
 ).with_structured_output(RouteDecision)
 
 # -----------------------

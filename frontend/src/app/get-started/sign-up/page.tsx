@@ -2,24 +2,86 @@
 
 import { ArrowRight } from "lucide-react";
 import { NeoCard } from "@/components/NeoCard";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+const ROLES = [
+    { label: "Student / Fresher", emoji: "🎓" },
+    { label: "Working Professional", emoji: "🧑‍💼" },
+    { label: "Blue-Collar / Gig Worker", emoji: "👩‍🔧" },
+    { label: "Employer / Recruiter", emoji: "🏢" },
+    { label: "Career Re-starter / Homemaker / Retired", emoji: "🧓" },
+];
+
 export default function GetStarted() {
+    const [role, setRole] = useState<string | null>(null);
     const router = useRouter();
 
     return (
         <main className="min-h-screen bg-black text-white pt-32 pb-20 overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#B9FF66] rounded-full blur-[150px] opacity-20 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-125 h-125 bg-[#B9FF66] rounded-full blur-[150px] opacity-20 pointer-events-none" />
 
-            <div className="max-w-xl mx-auto px-6 relative z-10 text-center">
-                <h1 className="text-4xl font-bold mb-8">
-                    Welcome back
+            <div className="max-w-2xl mx-auto px-6 relative z-10 text-center">
+                <span className="bg-[#B9FF66] text-black px-3 py-1 rounded-full font-bold text-sm uppercase tracking-wider mb-6 inline-block">
+                    Free Alpha
+                </span>
+
+                <h1 className="text-5xl md:text-7xl font-bold mb-8">
+                    Start your search.
                 </h1>
+
+                <p className="text-xl text-gray-400 mb-12">
+                    No credit card required. Just an agent that works for you.
+                </p>
 
                 <NeoCard color="white" className="p-8 text-left space-y-6">
                     <h2 className="text-2xl font-bold text-black">
-                        Sign in to continue
+                        Set Up Your Job Guide
                     </h2>
+
+                    {/* Name */}
+                    <div>
+                        <label className="block text-sm font-bold mb-2 text-black">
+                            Your Name
+                        </label>
+                        <input
+                            type="text"
+                            className="w-full bg-white border-2 border-black rounded-xl p-4 text-black"
+                            placeholder="Enter your name"
+                        />
+                    </div>
+
+                    {/* Role Selection */}
+                    <div>
+                        <label className="block text-sm font-bold mb-3 text-black">
+                            Role
+                        </label>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {ROLES.map((item) => (
+                                <button
+                                    key={item.label}
+                                    type="button"
+                                    onClick={() => setRole(item.label)}
+                                    className={`border-2 border-black rounded-xl p-4 text-left font-bold transition-all shadow-[3px_3px_0px_#000]
+                                        ${
+                                            role === item.label
+                                                ? "bg-[#B9FF66] text-black"
+                                                : "bg-white text-black hover:bg-gray-100"
+                                        }
+                                        ${
+                                            item.label === "Career Re-starter / Homemaker / Retired"
+                                                ? "sm:col-span-2"
+                                                : ""
+                                        }
+                                    `}
+                                >
+                                    <span className="mr-2">{item.emoji}</span>
+                                    {item.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
 
                     {/* Email */}
                     <div>
@@ -29,38 +91,19 @@ export default function GetStarted() {
                         <input
                             type="email"
                             className="w-full bg-white border-2 border-black rounded-xl p-4 text-black"
-                            placeholder="you@company.com"
+                            placeholder="you@gmail.com"
                         />
-                    </div>
-
-                    {/* Password */}
-                    <div>
-                        <label className="block text-sm font-bold mb-2 text-black">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            className="w-full bg-white border-2 border-black rounded-xl p-4 text-black"
-                            placeholder="Enter your password"
-                        />
-                    </div>
-
-                    {/* Forgot password */}
-                    <div className="text-right">
-                        <button
-                            onClick={() => router.push("/get-started/verify")}
-                            className="text-sm font-bold text-black opacity-70 hover:opacity-100"
-                        >
-                            Forgot password?
-                        </button>
+                        <p className="text-xs text-gray-600 mt-2">
+                            We’ll verify your email and help you set a password next.
+                        </p>
                     </div>
 
                     {/* CTA */}
                     <button
-                        onClick={() => router.push("/chat")}
+                        onClick={() => router.push("/get-started/verify")}
                         className="w-full bg-black text-[#B9FF66] border-2 border-black rounded-xl hover:bg-[#B9FF66] hover:text-black py-4 text-lg font-bold flex items-center justify-center gap-2 transition-all shadow-[4px_4px_0px_#000]"
                     >
-                        Sign In <ArrowRight size={20} />
+                        Continue <ArrowRight size={20} />
                     </button>
 
                     {/* OR Divider */}
@@ -109,16 +152,6 @@ export default function GetStarted() {
                     </div>
 
                 </NeoCard>
-
-                <p className="mt-6 text-sm text-gray-400">
-                    Don’t have an account?{" "}
-                    <button
-                        onClick={() => router.push("/get-started/sign-up")}
-                        className="text-[#B9FF66] font-bold hover:underline"
-                    >
-                        Sign up
-                    </button>
-                </p>
             </div>
         </main>
     );
